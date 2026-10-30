@@ -1,54 +1,56 @@
 package deportes;
 
-import deportes.cliente.GestorKitDeportivo;
+import deportes.datos.ClienteBaseDatos;
+import deportes.datos.FuenteConCache;
+import deportes.datos.FuenteDatosMaterial;
+import deportes.datos.FuenteTraducida;
+import deportes.datos.Traductor;
+import deportes.datos.TraductorConMemoria;
+import deportes.datos.TraductorMyMemory;
 import deportes.fabrica.FabricaDeportiva;
+import deportes.vista.VentanaKit;
 
 // --- Imports Persona A (fitness y running) ---
 
-// --- Imports Persona B (escalada y gimnasia) ---
+// --- Imports Persona B (natación y gimnasia) ---
 
-import java.util.Scanner;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
- * Punto de entrada. Es el único lugar del programa que conoce
- * las fábricas concretas: elige una y se la entrega al gestor.
+ * Punto de entrada. Es el único lugar del programa que conoce las clases
+ * concretas: monta la fuente de datos, registra las fábricas de cada deporte
+ * y abre la ventana.
  */
 public class Main {
 
     public static void main(String[] args) {
-        String deporte = (args.length > 0) ? args[0] : pedirDeporte();
+        Path archivo = Path.of("datos", "catalogo.db");
 
-        FabricaDeportiva fabrica;
-        try {
-            fabrica = crearFabrica(deporte);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-            return;
-        }
+        // Fuente de datos: la base de datos local (creada con ImportadorCatalogo),
+        // traducida al español y con caché. Cada capa es un decorador:
+        //   caché -> traducción -> base de datos
+        // Alternativa en vivo, sin base de datos:
+        //   new ClienteShopify("https://decathlon.qa", "QAR") en lugar de baseDatos
+        ClienteBaseDatos baseDatos = new ClienteBaseDatos(archivo);
+        Traductor traductor = new TraductorConMemoria(
+                new TraductorMyMemory(System.getenv("MYMEMORY_EMAIL")), archivo);
+        FuenteDatosMaterial fuente = new FuenteConCache(new FuenteTraducida(baseDatos, traductor));
 
-        GestorKitDeportivo gestor = new GestorKitDeportivo(fabrica);
-        gestor.prepararSesion();
-    }
+        // Catálogo de deportes: nombre visible -> cómo crear su fábrica
+        Map<String, Supplier<FabricaDeportiva>> deportes = new LinkedHashMap<>();
 
-    private static FabricaDeportiva crearFabrica(String deporte) {
-        switch (deporte.trim().toUpperCase()) {
-            // --- Casos Persona A (fitness y running) ---
+        // --- Deportes Persona A (fitness y running) ---
 
-            // --- Casos Persona B (escalada y gimnasia) ---
+        // --- Deportes Persona B (natación y gimnasia) ---
 
-            default:
-                throw new IllegalArgumentException("Deporte no disponible: " + deporte);
-        }
-    }
-
-    private static String pedirDeporte() {
-        System.out.println("Elige un deporte:");
-        System.out.println("  1. Fitness");
-        System.out.println("  2. Running");
-        System.out.println("  3. Escalada");
-        System.out.println("  4. Gimnasia");
-        System.out.print("> ");
-        Scanner sc = new Scanner(System.in);
-        return sc.hasNextLine() ? sc.nextLine() : "";
+        VentanaKit.abrir(deportes, List.of(
+                baseDatos.describirOrigen(),
+                baseDatos.describirPrecios(),
+                "Rates By Exchange Rate API",
+                "Traducción automática: MyMemory"));
     }
 }
