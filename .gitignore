@@ -14,3 +14,9 @@ bin/
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Maven
+target/
+
+# Importación a medias (la base de datos datos/catalogo.db SÍ se sube)
+*.tmp

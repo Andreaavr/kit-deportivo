@@ -5,26 +5,34 @@ import deportes.productos.AccesorioDeportivo;
 import deportes.productos.CalzadoDeportivo;
 import deportes.productos.EquipoPrincipal;
 
+import java.util.List;
+
 /**
  * Cliente del patrón. Solo depende de interfaces: nunca conoce
- * qué deporte concreto está preparando.
+ * qué deporte concreto está preparando ni de dónde salen los datos.
+ * Pide a la fábrica todos los productos de cada tipo.
  */
 public class GestorKitDeportivo {
-    private final EquipoPrincipal equipo;
-    private final CalzadoDeportivo calzado;
-    private final AccesorioDeportivo accesorio;
+
+    private final List<EquipoPrincipal> equipos;
+    private final List<CalzadoDeportivo> calzados;
+    private final List<AccesorioDeportivo> accesorios;
 
     public GestorKitDeportivo(FabricaDeportiva fabrica) {
-        this.equipo = fabrica.crearEquipo();
-        this.calzado = fabrica.crearCalzado();
-        this.accesorio = fabrica.crearAccesorio();
+        this.equipos = List.copyOf(fabrica.crearEquipos());
+        this.calzados = List.copyOf(fabrica.crearCalzados());
+        this.accesorios = List.copyOf(fabrica.crearAccesorios());
     }
 
-    public void prepararSesion() {
-        System.out.println("\n--- Preparando tu equipamiento deportivo ---");
-        equipo.preparar();
-        calzado.calzar();
-        accesorio.usar();
-        System.out.println("¡Todo listo para tu entrenamiento sin incompatibilidades!\n");
+    public List<EquipoPrincipal> getEquipos() {
+        return equipos;
+    }
+
+    public List<CalzadoDeportivo> getCalzados() {
+        return calzados;
+    }
+
+    public List<AccesorioDeportivo> getAccesorios() {
+        return accesorios;
     }
 }
