@@ -12,6 +12,7 @@ import deportes.vista.VentanaKit;
 
 // --- Imports Persona A (fitness y running) ---
 import deportes.familias.fitness.FabricaFitness;
+import deportes.familias.running.FabricaRunning;
 
 // --- Imports Persona B (natación y gimnasia) ---
 
@@ -46,6 +47,7 @@ public class Main {
 
         // --- Deportes Persona A (fitness y running) ---
         deportes.put("Fitness", () -> new FabricaFitness(fuente));
+        deportes.put("Running", () -> new FabricaRunning(fuente));
 
         // --- Deportes Persona B (natación y gimnasia) ---
 
