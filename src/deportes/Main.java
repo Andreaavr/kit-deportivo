@@ -11,6 +11,7 @@ import deportes.fabrica.FabricaDeportiva;
 import deportes.vista.VentanaKit;
 
 // --- Imports Persona A (fitness y running) ---
+import deportes.familias.fitness.FabricaFitness;
 
 // --- Imports Persona B (natación y gimnasia) ---
 
@@ -44,6 +45,7 @@ public class Main {
         Map<String, Supplier<FabricaDeportiva>> deportes = new LinkedHashMap<>();
 
         // --- Deportes Persona A (fitness y running) ---
+        deportes.put("Fitness", () -> new FabricaFitness(fuente));
 
         // --- Deportes Persona B (natación y gimnasia) ---
 
