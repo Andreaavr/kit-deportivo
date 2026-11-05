@@ -10,9 +10,9 @@ import deportes.datos.TraductorMyMemory;
 import deportes.fabrica.FabricaDeportiva;
 import deportes.vista.VentanaKit;
 
-// --- Imports Persona 1 (fitness y running) ---
+// --- Imports Persona A (fitness y running) ---
 
-// --- Imports Persona 2 (natación y gimnasia) ---
+// --- Imports Persona B (natación y gimnasia) ---
 import deportes.familias.natacion.FabricaNatacion;
 import deportes.familias.gimnasia.FabricaGimnasia;
 
@@ -45,9 +45,9 @@ public class Main {
         // Catálogo de deportes: nombre visible -> cómo crear su fábrica
         Map<String, Supplier<FabricaDeportiva>> deportes = new LinkedHashMap<>();
 
-        // --- Deportes Persona 1 (fitness y running) ---
+        // --- Deportes Persona A (fitness y running) ---
 
-        // --- Deportes Persona 2 (natación y gimnasia) ---
+        // --- Deportes Persona B (natación y gimnasia) ---
         deportes.put("Natación", () -> new FabricaNatacion(fuente));
         deportes.put("Gimnasia", () -> new FabricaGimnasia(fuente));
 
