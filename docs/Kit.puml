@@ -1,0 +1,592 @@
+@startuml
+class deportes.familias.gimnasia.AccesorioGimnasia {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+class deportes.familias.gimnasia.CalzadoGimnasia {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+class deportes.datos.ClienteShopify {
+~ {static} String USER_AGENT
+- {static} int RESULTADOS
+~ {static} int MAX_DEPORTES
+- {static} Pattern PARRAFO
+- String urlTienda
+- String moneda
+- HttpClient http
++ List<InfoMaterial> buscar(Criterio)
+~ {static} JsonObject elegirProducto(String,Criterio)
+~ {static} List<JsonObject> elegirProductos(String,Criterio)
+~ InfoMaterial leerProducto(JsonObject)
+~ {static} String[] descripcionYExtracto(String)
+~ {static} int numeroDeportes(List<String>)
+- {static} String textoDeporte(JsonObject)
+- {static} String textoTipo(JsonObject)
+~ {static} boolean contienePalabraCompleta(String,List<String>)
+~ {static} List<String> etiquetas(JsonObject)
+- {static} boolean contieneAlguna(String,List<String>)
+~ {static} List<String> parrafos(String)
+~ {static} String formatearPrecio(String,String)
+- {static} String decodificar(String)
+~ {static} String texto(JsonObject,String)
+~ {static} String normalizar(String)
+- {static} String codificar(String)
+- {static} String vacioANull(String)
+}
+
+
+class deportes.vista.PanelRedondeado {
+- int radio
+- boolean sombra
+# void paintComponent(Graphics)
+~ int margenSombra()
+}
+
+
+class deportes.datos.Criterio {
+- String busqueda
+- List<String> deporte
+- List<String> tipo
++ {static} String[] CALZADO
++ {static} Criterio de(String)
++ Criterio deporte(String)
++ Criterio tipo(String)
++ List<String> deporte()
++ String busqueda()
++ List<String> tipo()
+}
+
+
+interface deportes.datos.FuenteDatosMaterial {
+~ List<InfoMaterial> buscar(Criterio)
+}
+
+class deportes.familias.fitness.CalzadoFitness {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+class deportes.datos.FuenteConCache {
+- FuenteDatosMaterial fuente
+- Map<Criterio,List<InfoMaterial>> cache
++ List<InfoMaterial> buscar(Criterio)
+}
+
+
+class deportes.vista.Estilo {
+~ {static} Color FONDO
+~ {static} Color LATERAL
+~ {static} Color LATERAL_HOVER
+~ {static} Color LATERAL_TEXTO
+~ {static} Color LATERAL_TEXTO_TENUE
+~ {static} Color ACENTO
+~ {static} Color ACENTO_OSCURO
+~ {static} Color ACENTO_SUAVE
+~ {static} Color TARJETA
+~ {static} Color TEXTO
+~ {static} Color TEXTO_SECUNDARIO
+~ {static} Color TEXTO_TENUE
+~ {static} Color ESQUELETO
+~ {static} Color AVISO_SUAVE
+~ {static} Color AVISO
+~ {static} List<Color> COLORES_DEPORTE
+~ {static} String FUENTE
+~ {static} Font fuente(int,float)
+~ {static} void suavizar(Graphics2D)
+- {static} String elegirFuente(String)
+}
+
+
+class deportes.familias.gimnasia.EquipoGimnasia {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+class deportes.familias.fitness.FabricaFitness {
+- {static} String[] DEPORTE
+- FuenteDatosMaterial fuente
++ List<EquipoPrincipal> crearEquipos()
++ List<CalzadoDeportivo> crearCalzados()
++ List<AccesorioDeportivo> crearAccesorios()
+}
+
+
+class deportes.vista.TarjetaProducto {
+~ {static} int RADIO
+~ {static} int ALTO_IMAGEN
+~ {static} Dimension TAMANO
+- {static} int MAX_TITULO
+- {static} int MAX_DESCRIPCION
+- ImagenCabecera imagen
+- InfoMaterial info
+~ String urlImagen()
+~ void setImagen(BufferedImage)
+- JComponent crearEnlace(String)
+~ {static} void abrirEnNavegador(Component,String)
+~ {static} JTextArea texto(String,Font,Color)
+~ {static} T izquierda(T)
+~ {static} String recortar(String,int)
+- {static} String mayuscula(String)
+}
+
+
+class deportes.datos.ImportadorCatalogo {
+- {static} int POR_PAGINA
+- {static} int MAX_PAGINAS
+- {static} long PAUSA_MS
+~ {static} String ESQUEMA
+- {static} String URL_CAMBIO
+- {static} String INSERTAR
+- String tienda
+- String moneda
+- HttpClient http
++ {static} void main(String[])
++ void importar(Path)
+- Double obtenerTasaEur()
+~ {static} Double leerTasaEur(String)
+- String descargar(String)
+~ {static} List<Fila> leerPagina(String,String)
+- void guardar(List<Fila>,Double,Path)
+- {static} void conservarTraducciones(Connection,Path)
+- {static} List<String> valores(List<String>,String)
+- {static} String primero(List<String>)
+}
+
+
+class deportes.datos.ImportadorCatalogo$Fila {
+- long id
+- String titulo
+- String marca
+- String tipo
+- String naturaleza
+- String subdepartamento
+- String deportes
+- int numDeportes
+- String descripcion
+- String extracto
+- Double precio
+- String urlImagen
+- String urlEnlace
+- boolean disponible
++ String marca()
++ String extracto()
++ int numDeportes()
++ String urlImagen()
++ String urlEnlace()
++ String subdepartamento()
++ long id()
++ String tipo()
++ String deportes()
++ String descripcion()
++ String naturaleza()
++ boolean disponible()
++ String titulo()
++ Double precio()
+}
+
+
+class deportes.familias.natacion.EquipoNatacion {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+class deportes.Main {
++ {static} void main(String[])
+}
+
+class deportes.familias.fitness.AccesorioFitness {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+class deportes.vista.ImagenCabecera {
+- int radio
+- BufferedImage imagen
+- boolean cargando
+~ void setImagen(BufferedImage)
+# void paintComponent(Graphics)
+}
+
+
+class deportes.productos.InfoMaterial {
+- String titulo
+- String marca
+- String descripcion
+- String extracto
+- String precio
+- String urlImagen
+- String urlEnlace
++ {static} InfoMaterial noEncontrado(String)
++ {static} InfoMaterial sinConexion(String)
++ {static} InfoMaterial aviso(String,String)
++ boolean encontrado()
++ String marca()
++ String precio()
++ String descripcion()
++ String extracto()
++ String titulo()
++ String urlImagen()
++ String urlEnlace()
+}
+
+
+class deportes.datos.ClienteBaseDatos {
+- {static} Locale ES
+- {static} DateTimeFormatter FECHA
+- {static} String COLUMNA_TIPO
+- Path archivo
+- Metadatos metadatos
++ List<InfoMaterial> buscar(Criterio)
+~ {static} Consulta construirConsulta(Criterio)
++ String describirOrigen()
++ String describirPrecios()
+~ {static} String formatearPrecio(double,String,Double)
+- String formatearPrecio(double,Metadatos)
+- Connection conectar()
+- Metadatos metadatos(Connection)
+- {static} Metadatos leerMetadatos(Connection,String)
+- Metadatos metadatosSinError()
+- {static} String vacioANull(String)
+}
+
+
+class deportes.datos.ClienteBaseDatos$Consulta {
+- String sql
+- List<String> parametros
++ String sql()
++ List<String> parametros()
+}
+
+
+class deportes.datos.ClienteBaseDatos$Metadatos {
+- String tienda
+- String moneda
+- LocalDate fecha
+- int productos
+- Double tasaEur
+- LocalDate fechaTasa
++ LocalDate fecha()
++ String moneda()
++ Double tasaEur()
++ int productos()
++ LocalDate fechaTasa()
++ String tienda()
+}
+
+
+class deportes.datos.FuenteTraducida {
+~ {static} int MAX_DESCRIPCION
+- FuenteDatosMaterial fuente
+- Traductor traductor
+- ExecutorService hilos
++ List<InfoMaterial> buscar(Criterio)
+- InfoMaterial traducir(InfoMaterial)
+~ {static} String resumir(String)
+- {static} String conRespaldo(String,String)
+}
+
+
+class deportes.familias.running.EquipoRunning {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+class deportes.familias.natacion.CalzadoNatacion {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+class deportes.familias.running.AccesorioRunning {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+interface deportes.productos.ProductoDeportivo {
+~ InfoMaterial getInfo()
+~ String getTipo()
+}
+
+class deportes.datos.TraductorMyMemory {
+- {static} String URL
+~ {static} int MAX_CARACTERES
+- String correo
+- HttpClient http
+- boolean limiteAlcanzado
++ String traducir(String)
+~ {static} Respuesta leerRespuesta(String)
+~ {static} String recortar(String)
+- {static} String decodificar(String)
+- {static} String codificar(String)
+}
+
+
+class deportes.datos.TraductorMyMemory$Respuesta {
+- String traduccion
+- boolean limiteAlcanzado
++ boolean limiteAlcanzado()
++ String traduccion()
+}
+
+
+class deportes.cliente.GestorKitDeportivo {
+- List<EquipoPrincipal> equipos
+- List<CalzadoDeportivo> calzados
+- List<AccesorioDeportivo> accesorios
++ List<EquipoPrincipal> getEquipos()
++ List<CalzadoDeportivo> getCalzados()
++ List<AccesorioDeportivo> getAccesorios()
+}
+
+
+interface deportes.productos.EquipoPrincipal {
+~ String getTipo()
+}
+
+class deportes.datos.TraductorConMemoria {
+~ {static} String TABLA
+- Traductor traductor
+- Path archivo
+- boolean tablaCreada
++ String traducir(String)
+- String buscarGuardada(String)
+- void guardar(String,String)
+- Connection conectar()
+}
+
+
+interface deportes.productos.AccesorioDeportivo {
+~ String getTipo()
+}
+
+class deportes.familias.running.FabricaRunning {
+- {static} String[] DEPORTE
+- FuenteDatosMaterial fuente
++ List<EquipoPrincipal> crearEquipos()
++ List<CalzadoDeportivo> crearCalzados()
++ List<AccesorioDeportivo> crearAccesorios()
+}
+
+
+class deportes.datos.CargadorImagenes {
+- {static} HttpClient HTTP
+- {static} Map<String,BufferedImage> CACHE
++ {static} BufferedImage cargar(String)
+~ {static} String reducida(String)
+- {static} BufferedImage descargar(String)
+}
+
+
+class deportes.vista.TarjetaEsqueleto {
+- Timer latido
+- float fase
++ void addNotify()
++ void removeNotify()
+# void paintComponent(Graphics)
+}
+
+
+class deportes.vista.Pestanas {
+- {static} int ALTO
+- {static} int SEPARACION
+- List<String> nombres
+- List<String> contadores
+- List<int[]> zonas
+- int seleccionada
+- int encima
+- IntConsumer alCambiar
+~ void setPestanas(List<String>,List<String>)
+~ void setSeleccionada(int)
+~ void alCambiar(IntConsumer)
+- int indiceEn(int)
+# void paintComponent(Graphics)
+}
+
+
+interface deportes.datos.Traductor {
+~ String traducir(String)
+}
+
+class deportes.familias.running.CalzadoRunning {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+class deportes.familias.gimnasia.FabricaGimnasia {
+- {static} String[] DEPORTE
+- FuenteDatosMaterial fuente
++ List<EquipoPrincipal> crearEquipos()
++ List<CalzadoDeportivo> crearCalzados()
++ List<AccesorioDeportivo> crearAccesorios()
+}
+
+
+class deportes.familias.fitness.EquipoFitness {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+interface deportes.productos.CalzadoDeportivo {
+~ String getTipo()
+}
+
+class deportes.vista.VentanaKit {
+- {static} String[] CATEGORIAS
+- {static} String URL_CAMBIO
+- Map<String,Supplier<FabricaDeportiva>> deportes
+- List<String> creditos
+- List<ElementoMenu> elementos
+- JLabel titulo
+- JLabel subtitulo
+- Insignia estado
+- Pestanas pestanas
+- Cuadricula cuadricula
+- JScrollPane desplazamiento
+- ExecutorService descargas
+- List<List<? extends ProductoDeportivo>> categorias
+- SwingWorker<GestorKitDeportivo,Void> cargaEnCurso
+- int generacion
++ {static} void abrir(Map<String,Supplier<FabricaDeportiva>>,List<String>)
+- JComponent crearLateral()
+- JComponent crearContenido()
+- void seleccionar(int)
+- void cargar(String)
+- void mostrarProductos(GestorKitDeportivo)
+- void mostrarCategoria(int)
+- void irArriba()
+- {static} boolean hayProductos(List<? extends ProductoDeportivo>)
+- void mostrarVacio()
+- {static} JLabel etiqueta(String,int,float,Color)
+}
+
+
+class deportes.vista.VentanaKit$Cuadricula {
+- {static} int HUECO
+- {static} Insets MARGEN
+~ void mostrar(List<Component>)
+~ void mostrarMensaje(String,String)
+- int columnas(int)
++ void doLayout()
++ Dimension getPreferredSize()
++ Dimension getPreferredScrollableViewportSize()
++ int getScrollableUnitIncrement(Rectangle,int,int)
++ int getScrollableBlockIncrement(Rectangle,int,int)
++ boolean getScrollableTracksViewportWidth()
++ boolean getScrollableTracksViewportHeight()
+}
+
+
+class deportes.vista.VentanaKit$ElementoMenu {
+- String deporte
+- Color color
+- int indice
+- boolean seleccionado
+- boolean encima
+~ void setSeleccionado(boolean)
+# void paintComponent(Graphics)
+}
+
+
+class deportes.vista.VentanaKit$Logo {
+# void paintComponent(Graphics)
+}
+
+class deportes.vista.VentanaKit$BarraFina {
+# void configureScrollBarColors()
+# JButton createDecreaseButton(int)
+# JButton createIncreaseButton(int)
+- {static} JButton botonVacio()
+# void paintTrack(Graphics,JComponent,Rectangle)
+# void paintThumb(Graphics,JComponent,Rectangle)
+}
+
+class deportes.vista.VentanaKit$Insignia {
+- Color fondo
+~ void mostrar(String,Color,Color)
+# void paintComponent(Graphics)
+}
+
+
+interface deportes.fabrica.FabricaDeportiva {
+~ List<EquipoPrincipal> crearEquipos()
+~ List<CalzadoDeportivo> crearCalzados()
+~ List<AccesorioDeportivo> crearAccesorios()
+}
+
+class deportes.familias.natacion.FabricaNatacion {
+- {static} String[] DEPORTE
+- FuenteDatosMaterial fuente
++ List<EquipoPrincipal> crearEquipos()
++ List<CalzadoDeportivo> crearCalzados()
++ List<AccesorioDeportivo> crearAccesorios()
+}
+
+
+class deportes.familias.natacion.AccesorioNatacion {
+- InfoMaterial info
++ InfoMaterial getInfo()
+}
+
+
+
+
+deportes.productos.AccesorioDeportivo <|.. deportes.familias.gimnasia.AccesorioGimnasia
+deportes.productos.CalzadoDeportivo <|.. deportes.familias.gimnasia.CalzadoGimnasia
+deportes.datos.FuenteDatosMaterial <|.. deportes.datos.ClienteShopify
+deportes.vista.JPanel <|-- deportes.vista.PanelRedondeado
+deportes.productos.CalzadoDeportivo <|.. deportes.familias.fitness.CalzadoFitness
+deportes.datos.FuenteDatosMaterial <|.. deportes.datos.FuenteConCache
+deportes.productos.EquipoPrincipal <|.. deportes.familias.gimnasia.EquipoGimnasia
+deportes.fabrica.FabricaDeportiva <|.. deportes.familias.fitness.FabricaFitness
+deportes.vista.PanelRedondeado <|-- deportes.vista.TarjetaProducto
+deportes.datos.ImportadorCatalogo +.. deportes.datos.ImportadorCatalogo$Fila
+deportes.productos.EquipoPrincipal <|.. deportes.familias.natacion.EquipoNatacion
+deportes.productos.AccesorioDeportivo <|.. deportes.familias.fitness.AccesorioFitness
+deportes.vista.JComponent <|-- deportes.vista.ImagenCabecera
+deportes.datos.FuenteDatosMaterial <|.. deportes.datos.ClienteBaseDatos
+deportes.datos.ClienteBaseDatos +.. deportes.datos.ClienteBaseDatos$Consulta
+deportes.datos.ClienteBaseDatos +.. deportes.datos.ClienteBaseDatos$Metadatos
+deportes.datos.FuenteDatosMaterial <|.. deportes.datos.FuenteTraducida
+deportes.productos.EquipoPrincipal <|.. deportes.familias.running.EquipoRunning
+deportes.productos.CalzadoDeportivo <|.. deportes.familias.natacion.CalzadoNatacion
+deportes.productos.AccesorioDeportivo <|.. deportes.familias.running.AccesorioRunning
+deportes.datos.Traductor <|.. deportes.datos.TraductorMyMemory
+deportes.datos.TraductorMyMemory +.. deportes.datos.TraductorMyMemory$Respuesta
+deportes.productos.ProductoDeportivo <|-- deportes.productos.EquipoPrincipal
+deportes.datos.Traductor <|.. deportes.datos.TraductorConMemoria
+deportes.productos.ProductoDeportivo <|-- deportes.productos.AccesorioDeportivo
+deportes.fabrica.FabricaDeportiva <|.. deportes.familias.running.FabricaRunning
+deportes.vista.PanelRedondeado <|-- deportes.vista.TarjetaEsqueleto
+deportes.vista.JComponent <|-- deportes.vista.Pestanas
+deportes.productos.CalzadoDeportivo <|.. deportes.familias.running.CalzadoRunning
+deportes.fabrica.FabricaDeportiva <|.. deportes.familias.gimnasia.FabricaGimnasia
+deportes.productos.EquipoPrincipal <|.. deportes.familias.fitness.EquipoFitness
+deportes.productos.ProductoDeportivo <|-- deportes.productos.CalzadoDeportivo
+deportes.vista.JFrame <|-- deportes.vista.VentanaKit
+deportes.vista.VentanaKit +.. deportes.vista.VentanaKit$Cuadricula
+deportes.vista.Scrollable <|.. deportes.vista.VentanaKit$Cuadricula
+deportes.vista.JPanel <|-- deportes.vista.VentanaKit$Cuadricula
+deportes.vista.VentanaKit +.. deportes.vista.VentanaKit$ElementoMenu
+deportes.vista.JComponent <|-- deportes.vista.VentanaKit$ElementoMenu
+deportes.vista.VentanaKit +.. deportes.vista.VentanaKit$Logo
+deportes.vista.JComponent <|-- deportes.vista.VentanaKit$Logo
+deportes.vista.VentanaKit +.. deportes.vista.VentanaKit$BarraFina
+deportes.vista.BasicScrollBarUI <|-- deportes.vista.VentanaKit$BarraFina
+deportes.vista.VentanaKit +.. deportes.vista.VentanaKit$Insignia
+deportes.vista.JLabel <|-- deportes.vista.VentanaKit$Insignia
+deportes.fabrica.FabricaDeportiva <|.. deportes.familias.natacion.FabricaNatacion
+deportes.productos.AccesorioDeportivo <|.. deportes.familias.natacion.AccesorioNatacion
+@enduml

@@ -12,10 +12,10 @@ de datos SQLite propia. La ventana los muestra **en español** y con el precio
 
 | Deporte | Persona | Equipo principal | Calzado | Accesorios |
 |---|---|---|---|---|
-| Fitness | A | 84 | 5 | 68 |
-| Running | A | 10 | 19 | 36 |
-| Natación | B | 128 | 38 | 53 |
-| Gimnasia | B | 22 | 8 | 22 |
+| Fitness | 1 | 84 | 5 | 68 |
+| Running | 1 | 10 | 19 | 36 |
+| Natación | 2 | 128 | 38 | 53 |
+| Gimnasia | 2 | 22 | 8 | 22 |
 
 (Productos disponibles en el catálogo importado; se calcularon con las consultas
 reales de la tabla de criterios más abajo.)
@@ -155,7 +155,28 @@ En `Main` se ve cómo se componen los decoradores:
 FuenteDatosMaterial fuente = new FuenteConCache(new FuenteTraducida(baseDatos, traductor));
 ```
 
-Diagrama UML completo: [`docs/uml.png`](docs/uml.png) (también en SVG).
+Los diagramas UML están en la carpeta `docs/` (ver [Diagramas UML](#diagramas-uml)).
+
+## Diagramas UML
+
+En la carpeta `docs/` hay tres diagramas, cada uno con un propósito distinto:
+
+| Archivo | Tipo | Qué muestra |
+|---|---|---|
+| [`docs/uml.png`](docs/uml.png) | Diseño, hecho a mano | Solo el patrón **Abstract Factory** y el paquete `datos` (Strategy y Decorator). Es el más sencillo, para explicar el diseño. |
+| [`docs/uml.svg`](docs/uml.svg) | Diseño completo, hecho a mano | Todo el programa: Abstract Factory, el paquete `datos` con todos sus atributos, `Main` y el paquete `vista` (Swing), con sus relaciones (usa, crea, envuelve, composición y herencia). |
+| [`docs/uml.puml`](docs/uml.puml) | Generado automáticamente | Diagrama PlantUML obtenido directamente del código final con un analizador. Demuestra que lo implementado coincide con el diseño. |
+
+**Cómo leerlos**
+
+- Los diagramas hechos a mano agrupan las clases por patrón y usan etiquetas
+  (*Abstract Factory*, *Strategy*, *Decorator*). Para no cruzar doce flechas, la
+  relación «crea» de cada fábrica con sus productos se indica con una nota.
+- El generado muestra todas las clases tal como están en el código, pero solo
+  dibuja herencias e implementaciones. No incluye las relaciones de uso ni de
+  creación, que sí aparecen en los diagramas de diseño.
+- Para ver el `.puml` en IntelliJ, instala el complemento **PlantUML Integration**
+  y abre el archivo.
 
 ## Estructura
 
@@ -178,16 +199,46 @@ Diagrama UML completo: [`docs/uml.png`](docs/uml.png) (también en SVG).
 Los productos concretos no son `public`: solo la fábrica de su paquete puede
 crearlos, así que el compilador impide mezclar familias.
 
+## Desarrollo por etapas
+
+El proyecto se ha desarrollado en GitHub en dos etapas. Cada una está marcada con
+una etiqueta (`git tag`), de forma que se puede consultar el estado exacto del
+código al final de cada etapa.
+
+| Etapa | Etiqueta | Contenido | Dónde |
+|---|---|---|---|
+| 1. Parte común | `etapa-1` | Interfaces y paquetes comunes: productos abstractos, fábrica abstracta, cliente, fuente de datos (base de datos, traducción, euros) y ventana | Rama `main` |
+| 2. Parte específica | `etapa-2` | Las cuatro familias concretas (dos por persona), desarrolladas cada una en su rama y fusionadas en `main` con un *pull request* | Ramas `persona-1/fitness-running` y `persona-2/natacion-gimnasia` → `main` |
+
+Historial resumido de `main`:
+
+```
+*   Merge pull request #2 (persona-2/natacion-gimnasia)      ← etapa-2
+|\
+| * Añade familia Gimnasia
+| * Añade familia Natación
+* |   Merge pull request #1 (persona-1/fitness-running)
+|\ \
+| * Añade familia Running
+| * Añade familia Fitness
+|/
+* Actualiza la ventana: pestañas por categoría…              ← etapa-1
+* Añade base de datos, traducción, euros y categorías…
+* Estructura base del patrón Abstract Factory
+```
+
 ## Reparto del trabajo
 
-La rama `main` contiene la base común. Cada persona trabaja en su propia rama y
-solo toca sus archivos:
+La rama `main` contiene la versión estable. Cada persona trabaja en su propia
+rama y solo toca sus archivos:
 
-| | Persona A | Persona B |
+| | Persona 1 | Persona 2 |
 |---|---|---|
-| Rama | `persona-a/fitness-running` | `persona-b/natacion-gimnasia` |
+| Rama | `persona-1/fitness-running` | `persona-2/natacion-gimnasia` |
 | Carpetas nuevas | `familias/fitness/`, `familias/running/` | `familias/natacion/`, `familias/gimnasia/` |
-| En `Main.java` | Solo bajo los comentarios `Persona A` | Solo bajo los comentarios `Persona B` |
+| En `Main.java` | Solo bajo los comentarios `Persona 1` | Solo bajo los comentarios `Persona 2` |
+| Commits | Uno por deporte | Uno por deporte |
+| Fusión en `main` | Pull request #1 | Pull request #2 |
 
 Cada familia son 4 archivos: `Fabrica<Deporte>`, `Equipo<Deporte>`,
 `Calzado<Deporte>` y `Accesorio<Deporte>`. La fábrica recibe una
@@ -197,7 +248,7 @@ Cada familia son 4 archivos: `Fabrica<Deporte>`, `Equipo<Deporte>`,
 ```java
 @Override
 public List<CalzadoDeportivo> crearCalzados() {
-    return fuente.buscar(Criterio.de("pool sandals").deporte("swimming").tipo(Criterio.CALZADO))
+    return fuente.buscar(Criterio.de("pool sandals").deporte(DEPORTE).tipo(Criterio.CALZADO))
             .stream().<CalzadoDeportivo>map(CalzadoNatacion::new).toList();
 }
 ```
@@ -219,50 +270,38 @@ class CalzadoNatacion implements CalzadoDeportivo {
 }
 ```
 
-Para que el deporte aparezca en la ventana, se registra en `Main`, en tu zona:
+Cada deporte se registra en `Main`, en la zona de su persona:
 
 ```java
-// --- Imports Persona B (natación y gimnasia) ---
+// --- Imports Persona 2 (natación y gimnasia) ---
 import deportes.familias.natacion.FabricaNatacion;
+import deportes.familias.gimnasia.FabricaGimnasia;
 ...
-// --- Deportes Persona B (natación y gimnasia) ---
+// --- Deportes Persona 2 (natación y gimnasia) ---
 deportes.put("Natación", () -> new FabricaNatacion(fuente));
+deportes.put("Gimnasia", () -> new FabricaGimnasia(fuente));
 ```
 
+**Reglas seguidas para que la fusión salga limpia**
 
-**Reglas para que el merge salga limpio**
+1. En las ramas no se modifica nada de `productos/`, `fabrica/`, `datos/`,
+   `cliente/` ni `vista/`. Si hace falta cambiar algo común, se hace primero en `main`.
+2. En `Main.java`, cada persona escribe solo debajo de su comentario, sin borrar
+   ni cambiar los comentarios ni las líneas en blanco que separan las zonas.
+3. `datos/catalogo.db` no se sube desde las ramas (es binario y Git no puede
+   fusionarlo): las traducciones se suben desde `main` tras la fusión.
+4. Se compila y ejecuta antes de cada commit.
 
-1. No modificar nada de `productos/`, `fabrica/`, `datos/`, `cliente/` ni `vista/`
-   en las ramas. Si hace falta cambiar algo común, se acuerda y se hace primero en `main`.
-2. En `Main.java`, escribir solo debajo de tu comentario y no borrar los
-   comentarios ni las líneas en blanco que separan las zonas.
-3. No hacer commit de `datos/catalogo.db` desde las ramas (para evitar conflictos
-   en un archivo binario): las traducciones se suben desde `main`.
-4. Compilar y ejecutar antes de cada commit.
+Con estas reglas, las dos ramas se fusionaron en `main` sin conflictos.
 
 ## Flujo con Git
 
-Cada persona:
+1. **Etapa 1:** la parte común se sube a `main` y se marca con la etiqueta `etapa-1`.
+2. Desde `main` se crean las dos ramas, `persona-1/fitness-running` y
+   `persona-2/natacion-gimnasia`, y se suben a GitHub.
+3. Cada persona, en su rama, añade sus deportes con un commit por deporte y hace push.
+4. Cada rama se fusiona en `main` con un *pull request* en GitHub (#1 y #2).
+5. En `main` se actualiza `catalogo.db` con las traducciones y se marca la
+   versión final con la etiqueta `etapa-2`.
 
-```bash
-git clone <URL-del-repositorio>
-cd kit-deportivo
-git switch -c persona-a/fitness-running      # Persona B: persona-b/natacion-gimnasia
-
-# ... crear sus clases, compilar, probar ...
-git add src
-git commit -m "Añade familias Fitness y Running"
-git push -u origin persona-a/fitness-running
-```
-
-Integrar el trabajo (cuando las dos ramas estén terminadas):
-
-```bash
-git switch main
-git pull
-git merge persona-a/fitness-running
-git merge persona-b/natacion-gimnasia
-git push
-```
-
-También se puede hacer con un *pull request* por rama en GitHub.
+Para probar una versión concreta: `git checkout etapa-1` o `git checkout etapa-2`.
