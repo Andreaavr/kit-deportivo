@@ -14,6 +14,7 @@ import deportes.vista.VentanaKit;
 
 // --- Imports Persona 2 (natación y gimnasia) ---
 import deportes.familias.natacion.FabricaNatacion;
+import deportes.familias.gimnasia.FabricaGimnasia;
 
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
@@ -48,6 +49,7 @@ public class Main {
 
         // --- Deportes Persona 2 (natación y gimnasia) ---
         deportes.put("Natación", () -> new FabricaNatacion(fuente));
+        deportes.put("Gimnasia", () -> new FabricaGimnasia(fuente));
 
         VentanaKit.abrir(deportes, List.of(
                 baseDatos.describirOrigen(),
