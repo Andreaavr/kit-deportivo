@@ -15,6 +15,8 @@ import deportes.familias.fitness.FabricaFitness;
 import deportes.familias.running.FabricaRunning;
 
 // --- Imports Persona B (natación y gimnasia) ---
+import deportes.familias.natacion.FabricaNatacion;
+import deportes.familias.gimnasia.FabricaGimnasia;
 
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
@@ -50,6 +52,8 @@ public class Main {
         deportes.put("Running", () -> new FabricaRunning(fuente));
 
         // --- Deportes Persona B (natación y gimnasia) ---
+        deportes.put("Natación", () -> new FabricaNatacion(fuente));
+        deportes.put("Gimnasia", () -> new FabricaGimnasia(fuente));
 
         VentanaKit.abrir(deportes, List.of(
                 baseDatos.describirOrigen(),
