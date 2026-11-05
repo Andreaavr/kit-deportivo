@@ -10,9 +10,10 @@ import deportes.datos.TraductorMyMemory;
 import deportes.fabrica.FabricaDeportiva;
 import deportes.vista.VentanaKit;
 
-// --- Imports Persona A (fitness y running) ---
+// --- Imports Persona 1 (fitness y running) ---
 
-// --- Imports Persona B (natación y gimnasia) ---
+// --- Imports Persona 2 (natación y gimnasia) ---
+import deportes.familias.natacion.FabricaNatacion;
 
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
@@ -43,9 +44,10 @@ public class Main {
         // Catálogo de deportes: nombre visible -> cómo crear su fábrica
         Map<String, Supplier<FabricaDeportiva>> deportes = new LinkedHashMap<>();
 
-        // --- Deportes Persona A (fitness y running) ---
+        // --- Deportes Persona 1 (fitness y running) ---
 
-        // --- Deportes Persona B (natación y gimnasia) ---
+        // --- Deportes Persona 2 (natación y gimnasia) ---
+        deportes.put("Natación", () -> new FabricaNatacion(fuente));
 
         VentanaKit.abrir(deportes, List.of(
                 baseDatos.describirOrigen(),
